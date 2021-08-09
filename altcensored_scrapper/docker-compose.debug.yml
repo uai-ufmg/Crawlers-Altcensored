@@ -1,0 +1,48 @@
+version: '3.4'
+
+services:
+  altcensoredscrapper:
+    image: altcensoredscrapper
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m main "]
+    ports:
+      - 5678:5678
+    container_name: altcensoredscrapper
+    environment:
+      MONGODB_DATABASE: altcensoredscrapperdb
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: ytsemfake
+      MONGODB_HOSTNAME: altmongodb
+    volumes:
+      - ./src/data:/src/data
+    depends_on:
+       - altmongodb
+    networks:
+      - altmongo-compose-network
+
+  altmongodb:
+    image: mongo
+    container_name: altmongodb
+    restart: unless-stopped
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ytsemfake
+      MONGO_INITDB_DATABASE: altcensoredscrapperdb
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /tmp/log/mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./src/data/db:/data/db
+    networks:
+      - altmongo-compose-network         
+
+networks: 
+    altmongo-compose-network:
+      driver: bridge
+
+ 
+ 
