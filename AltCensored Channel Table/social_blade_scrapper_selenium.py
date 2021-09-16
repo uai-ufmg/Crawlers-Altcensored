@@ -18,7 +18,8 @@ default_url_preffix = r'https://socialblade.com/'
 url_preffix = r'youtube/channel/'
 default_url_suffix = r'/monthly'
 
-skip = 74
+skip = 141
+stop_at = 2300
 at = -1
 with open('channels_altcensored.csv', 'r', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='|')
@@ -26,6 +27,8 @@ with open('channels_altcensored.csv', 'r', encoding='utf-8') as csvfile:
         at = at + 1
         if at < skip:
             continue
+        if at > stop_at:
+            break
 
         url = default_url_preffix + url_preffix + row[1] + default_url_suffix
 
