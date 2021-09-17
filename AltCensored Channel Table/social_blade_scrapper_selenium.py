@@ -18,7 +18,10 @@ default_url_preffix = r'https://socialblade.com/'
 url_preffix = r'youtube/channel/'
 default_url_suffix = r'/monthly'
 
-skip = 146
+
+driver = webdriver.Firefox()
+
+skip = 433
 stop_at = 100000
 at = -1
 with open('channels_altcensored.csv', 'r', encoding='utf-8') as csvfile:
@@ -37,7 +40,6 @@ with open('channels_altcensored.csv', 'r', encoding='utf-8') as csvfile:
 
         url = default_url_preffix + url_preffix + row[1] + default_url_suffix
 
-        driver = webdriver.Firefox()
         try:
             driver.get(url)
         
@@ -49,8 +51,8 @@ with open('channels_altcensored.csv', 'r', encoding='utf-8') as csvfile:
                 write_csv(row[1],chart_idx,data)
                 chart_title_array.append((chart_idx, chart_title))
             write_csv(row[1],"dados_coletados",chart_title_array)
-            driver.close()
         except:
             print(row[1])
             time.sleep(10)
             continue
+driver.close()
